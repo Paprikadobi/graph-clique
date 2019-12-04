@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "undirected_graph.h"
 
@@ -7,16 +8,12 @@ int main() {
     if(g == NULL)
         return 1;
 
-    print_graph(g);
+    // print_graph(g);
 
-    simple_set* R = create_set(g->V);
-    simple_set* P = create_set(g->V);
-    simple_set* X = create_set(g->V);
+    find_maximal_cliques(g);
 
-    for(int i = 0; i < g->V; i++)
-        set_insert(i, P);
-
-    find_maximal_cliques(R, P, X, g);
+    for(int i = 0; i < g->number_of_max_cliques; i++) 
+        print_set(g->maximal_cliques[i]);
 
     return 0;
 }

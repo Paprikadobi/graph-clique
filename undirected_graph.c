@@ -8,9 +8,14 @@ graph* create_graph(int V) {
 
     g->V = V;
     g->adjacents = (l_list**) malloc(g->V * sizeof(l_list*));
+    g->maximal_clique = -1;
+    g->number_of_max_cliques = 0;
 
     for(int i = 0; i < V; i++) 
         g->adjacents[i] = create_list();
+
+    for(int i = 0; i < MAX_NUMBER_OF_MAX_CLIQUES; i++) 
+        g->maximal_cliques[i] = NULL;
 
     return g;
 }
@@ -46,9 +51,38 @@ void add_edge(int first, int second, graph *g) {
     insert_first(second, g->adjacents[first]);
 }
 
-simple_set* find_maximal_cliques(simple_set *R, simple_set *P, simple_set *X, graph *g) {
-    if(P->used == 0 && X->used == 0) 
-        print_set(R);
+void find_maximal_cliques(graph *g) {
+    simple_set* R = create_set(g->V);
+    simple_set* P = create_set(g->V);
+    simple_set* X = create_set(g->V);
+
+    for(int i = 0; i < g->V; i++)
+        set_insert(i, P);
+
+    _find_maximal_cliques(R, P, X, g);
+}
+
+void _find_maximal_cliques(simple_set *R, simple_set *P, simple_set *X, graph *g) {
+    if(P->used == 0 && X->used == 0) {
+        if(R->used == g->maximal_clique) {
+            if(g->number_of_max_cliques < MAX_NUMBER_OF_MAX_CLIQUES)
+                g->maximal_cliques[g->number_of_max_cliques++] = R;
+            else
+                printf("Bylo nalezeno více než maximální počet maximálních klik\n");
+        } else if(R->used > g->maximal_clique) {
+            g->maximal_clique = R->used;
+
+            for(int i = 0; i < g->number_of_max_cliques; i++) {
+                free(g->maximal_cliques[i]);
+                g->maximal_cliques[i] = NULL;
+            }
+
+            g->number_of_max_cliques = 0;
+            g->maximal_cliques[g->number_of_max_cliques++] = R;
+        }
+        
+        return;
+    }
 
     for(int i = 0; i < P->max; i++) {
         if(!set_contains(i, P))
@@ -57,7 +91,7 @@ simple_set* find_maximal_cliques(simple_set *R, simple_set *P, simple_set *X, gr
         simple_set *tmp_R = set_copy(R);
         set_insert(i, tmp_R);
         
-        find_maximal_cliques(tmp_R, set_intersection(P, g->adjacents[i]), set_intersection(X, g->adjacents[i]), g);
+        _find_maximal_cliques(tmp_R, set_intersection(P, g->adjacents[i]), set_intersection(X, g->adjacents[i]), g);
 
         set_remove(i, P);
         set_insert(i, X);

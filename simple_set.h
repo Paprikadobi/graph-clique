@@ -3,13 +3,16 @@
 
 #include "linked_list.h"
 
+#define IS_UNSET 0
+#define IS_SET 1
+
 typedef struct {
     char *values;
     int max;
     int used;
 } simple_set;
 
-simple_set* create_set(int count);
+simple_set* create_set(int k);
 
 simple_set* set_copy(simple_set *set);
 
