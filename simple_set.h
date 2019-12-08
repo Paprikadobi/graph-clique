@@ -1,3 +1,12 @@
+/* simple_set.h
+ * Předmět: Algoritmy (IAL)
+ * Projekt: 8. Největší klika v neorientovaném grafu 
+ * Vytvořil: Patrik Dobiáš
+ * Poslední změna: 8.12.2019
+ * 
+ * Hlavičkový soubor pro simple_set.h
+ */
+
 #ifndef SIMPLE_SET_H
 #define SIMPLE_SET_H
 
@@ -7,9 +16,9 @@
 #define IS_SET 1
 
 typedef struct {
-    char *values;
-    int max;
-    int used;
+    char *values;   // informace o tom, jestli set obsahuje daný klíč
+    int max;        // maximální počet klíčů
+    int used;       // existující počet klíčů
 } simple_set;
 
 simple_set* create_set(int k);

@@ -1,10 +1,26 @@
+/* undirected_graph.c
+ * Předmět: Algoritmy (IAL)
+ * Projekt: 8. Největší klika v neorientovaném grafu 
+ * Vytvořil: Patrik Dobiáš
+ * Poslední změna: 8.12.2019
+ * 
+ * V tomto souboru jsou implementovány funkce pro vytvoření grafu.
+ * Dále je tu implementován Bron–Kerboschův algoritmus pro nalezení maximální kliky v grafu.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 
 #include "undirected_graph.h"
 
+/* 
+ * Vytvoří graf se zadaným počtem prvků. 
+ * Vrací ukazatel na vytvořený graf, v případě chyby vrací NULL.
+ */
 graph* create_graph(int V) {
     graph *g = (graph*) malloc(sizeof(graph));
+    if(g == NULL)
+        return NULL;
 
     g->V = V;
     g->adjacents = (l_list**) malloc(g->V * sizeof(l_list*));
@@ -20,6 +36,10 @@ graph* create_graph(int V) {
     return g;
 }
 
+/*
+ * Načte graf ze souboru. 
+ * Jestliže zadaný soubor nelze přečíst vrací NULL, jinak vrací ukazatel na vytvořený graf.
+ */
 graph* load_from_file(char* file_name) {
     FILE *file = fopen(file_name, "r");
     if(file == NULL) {
@@ -43,6 +63,9 @@ graph* load_from_file(char* file_name) {
     return g;
 }
 
+/*
+ * Přidá hranu mezi dva prvky v grafu.
+ */
 void add_edge(int first, int second, graph *g) {
     if(first >= g->V || second >= g->V) 
         return;
@@ -51,6 +74,10 @@ void add_edge(int first, int second, graph *g) {
     insert_first(second, g->adjacents[first]);
 }
 
+/*
+ * Najde maximalní kliky v grafu. V této funkci se vytvoří pomocné sety, které jsou pro algoritmus hledání potřebné.
+ * Nalezené maximální kliky jsou uloženy v proměnné "maximal_cliques" grafu g.
+ */
 void find_maximal_cliques(graph *g) {
     simple_set* R = create_set(g->V);
     simple_set* P = create_set(g->V);
@@ -60,8 +87,15 @@ void find_maximal_cliques(graph *g) {
         set_insert(i, P);
 
     _find_maximal_cliques(R, P, X, g);
+
+    free_set(R);
+    free_set(P);
+    free_set(X);
 }
 
+/*
+ * Funkce implementující Bron–Kerboschův algoritmus pro hledání maximální kliky v grafu.
+ */
 void _find_maximal_cliques(simple_set *R, simple_set *P, simple_set *X, graph *g) {
     if(P->used == 0 && X->used == 0) {
         if(R->used == g->maximal_clique) {
@@ -98,6 +132,22 @@ void _find_maximal_cliques(simple_set *R, simple_set *P, simple_set *X, graph *g
     }
 }
 
+/*
+ * Uvolní paměť grafu.
+ */
+void free_graph(graph *g) {
+    for(int i = 0; i < g->V; i++) 
+        free_list(g->adjacents[i]);
+
+    for(int i = 0; i < g->number_of_max_cliques; i++) 
+        free_set(g->maximal_cliques[i]);
+
+    free(g);
+}
+
+/*
+ * Vypíše všechny prvky grafu a informaci o tom, se kterými prvky jsou propojeny.
+ */
 void print_graph(graph *g) {
     for(int i = 0; i < g->V; i++) {
         printf("%d: ", i);
