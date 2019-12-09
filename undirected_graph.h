@@ -13,7 +13,7 @@
 #include "linked_list.h"
 #include "simple_set.h"
 
-#define MAX_NUMBER_OF_MAX_CLIQUES 10
+#define MAX_NUMBER_OF_MAX_CLIQUES 30
 
 typedef struct {
     int V;                                                      // informace o počtu prvků v grafu 

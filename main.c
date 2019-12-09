@@ -18,7 +18,7 @@
 #include "undirected_graph.h"
 
 int main() {
-    graph *g = load_from_file("graph.txt");
+    graph *g = load_from_file("g_4.txt");
     if(g == NULL)
         return 1;
 
