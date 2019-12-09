@@ -87,10 +87,6 @@ void find_maximal_cliques(graph *g) {
         set_insert(i, P);
 
     _find_maximal_cliques(R, P, X, g);
-
-    free_set(R);
-    free_set(P);
-    free_set(X);
 }
 
 /*
@@ -98,22 +94,13 @@ void find_maximal_cliques(graph *g) {
  */
 void _find_maximal_cliques(simple_set *R, simple_set *P, simple_set *X, graph *g) {
     if(P->used == 0 && X->used == 0) {
-        if(R->used == g->maximal_clique) {
-            if(g->number_of_max_cliques < MAX_NUMBER_OF_MAX_CLIQUES)
-                g->maximal_cliques[g->number_of_max_cliques++] = R;
-            else
-                printf("Bylo nalezeno více než maximální počet maximálních klik\n");
-        } else if(R->used > g->maximal_clique) {
-            g->maximal_clique = R->used;
-
-            for(int i = 0; i < g->number_of_max_cliques; i++) {
-                free(g->maximal_cliques[i]);
-                g->maximal_cliques[i] = NULL;
-            }
-
-            g->number_of_max_cliques = 0;
+        if(g->number_of_max_cliques < MAX_NUMBER_OF_MAX_CLIQUES)
             g->maximal_cliques[g->number_of_max_cliques++] = R;
-        }
+        else
+            printf("Bylo nalezeno více než maximální počet maximálních klik\n");
+
+        free_set(P);
+        free_set(X);
         
         return;
     }
@@ -130,6 +117,10 @@ void _find_maximal_cliques(simple_set *R, simple_set *P, simple_set *X, graph *g
         set_remove(i, P);
         set_insert(i, X);
     }
+
+    free_set(R);
+    free_set(P);
+    free_set(X);
 }
 
 /*

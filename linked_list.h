@@ -26,5 +26,4 @@ l_list* create_list();
 void insert_first(int value, l_list *list);
 
 void free_list(l_list *list);
-
 #endif
