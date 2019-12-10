@@ -20,7 +20,7 @@
 
 int main() {
     for(int i = 1; i < 5; i++) {
-        char* file_name;
+        char file_name[10];
         sprintf(file_name, "g_%d.txt", i);
         graph *g = load_from_file(file_name);
         if(g == NULL)
