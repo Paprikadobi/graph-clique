@@ -1,22 +1,22 @@
-/* linked_list.c
+/* int_list.c
  * Předmět: Algoritmy (IAL)
  * Projekt: 8. Největší klika v neorientovaném grafu 
  * Vytvořil: Patrik Dobiáš
  * Poslední změna: 8.12.2019
  * 
- * 
+ * Implementace funkcí pro jednosměrně vázaný seznam, který obsahuje celočíselné hodnoty.
  */
 
 #include <stdlib.h>
 
-#include "linked_list.h"
+#include "int_list.h"
 
 /*
  * Vytvoří prázdný list. 
  * Vrací ukazatel na vytvořený list, v případě chyby vrací NULL.
  */
-l_list* create_list() {
-    l_list *list = (l_list*) malloc(sizeof(l_list));
+int_list* IL_create_list() {
+    int_list *list = (int_list*) malloc(sizeof(int_list));
     if(list == NULL)
         return NULL;
 
@@ -28,8 +28,8 @@ l_list* create_list() {
 /*
  * Vloží nový prvek na začátek listu.
  */
-void insert_first(int value, l_list *list) {
-    ll_element *element = (ll_element*) malloc(sizeof(ll_element));
+void IL_insert_first(int value, int_list *list) {
+    int_element *element = (int_element*) malloc(sizeof(int_element));
 
     element->value = value;
     element->next = list->first;
@@ -40,11 +40,11 @@ void insert_first(int value, l_list *list) {
 /*
  * Uvolní paměť listu.
  */
-void free_list(l_list *list) {
-    ll_element *current = list->first;
+void IL_free_list(int_list *list) {
+    int_element *current = list->first;
 
     while(current != NULL) {
-        ll_element *tmp = current;
+        int_element *tmp = current;
         current = current->next;
         free(tmp);
     }

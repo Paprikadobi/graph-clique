@@ -4,7 +4,7 @@
  * Vytvořil: Patrik Dobiáš
  * Poslední změna: 8.12.2019
  * 
- * 
+ * Jednoduchá implementace množiny a funkcí potřebných pro Bron–Kerboshův algoritmus.
  */
 
 #include <stdlib.h>
@@ -53,12 +53,12 @@ simple_set* set_copy(simple_set *set) {
 /*
  * Vytvoří set, který obsahuje prvky, které mají zadaný set a list společné. 
  */
-simple_set* set_intersection(simple_set *set, l_list *list) {
+simple_set* set_intersection(simple_set *set, int_list *list) {
     simple_set *intersected_set = create_set(set->max);
     if(intersected_set == NULL)
         return NULL;
 
-    ll_element *current = list->first;
+    int_element *current = list->first;
 
     while(current != NULL) {
         if(set_contains(current->value, set)) 

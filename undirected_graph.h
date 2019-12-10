@@ -10,17 +10,14 @@
 #ifndef UNDIRECTED_GRAPH_H
 #define UNDIRECTED_GRAPH_H
 
-#include "linked_list.h"
+#include "int_list.h"
+#include "set_list.h"
 #include "simple_set.h"
-
-#define MAX_NUMBER_OF_MAX_CLIQUES 30
 
 typedef struct {
     int V;                                                      // informace o počtu prvků v grafu 
-    l_list **adjacents;                                         // jednosměrně vázaný list reprezentující propojení prvků v grafu
-    simple_set *maximal_cliques[MAX_NUMBER_OF_MAX_CLIQUES];     // maximální nalazené kliky grafu
-    int maximal_clique;                                         // počet prvků v maximální klice grafu
-    int number_of_max_cliques;                                  // počet nalezených maximálních klik
+    int_list **adjacents;                                       // jednosměrně vázaný list reprezentující propojení prvků v grafu
+    set_list *maximal_cliques;                                  // maximální nalazené kliky grafu
 } graph;
 
 graph* create_graph(int V);

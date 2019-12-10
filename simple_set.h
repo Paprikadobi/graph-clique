@@ -10,7 +10,7 @@
 #ifndef SIMPLE_SET_H
 #define SIMPLE_SET_H
 
-#include "linked_list.h"
+#include "int_list.h"
 
 #define IS_UNSET 0
 #define IS_SET 1
@@ -25,7 +25,7 @@ simple_set* create_set(int k);
 
 simple_set* set_copy(simple_set *set);
 
-simple_set* set_intersection(simple_set *set, l_list *list);
+simple_set* set_intersection(simple_set *set, int_list *list);
 
 void set_insert(int key, simple_set *set);
 

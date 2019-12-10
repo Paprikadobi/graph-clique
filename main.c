@@ -10,6 +10,7 @@
  * Výsledky prezentujte vhodným způsobem. Součástí projektu bude načítání grafů ze souboru a vhodné testovací grafy. 
  * V dokumentaci uveďte teoretickou složitost úlohy a porovnejte ji s experimentálními výsledky.
  * 
+ * Hlavní soubor, ve kterém jsou načteny grafy ze souborů a poté se zavolá funkce pro nalezení největší kliky.
  */
 
 #include <stdlib.h>
@@ -18,16 +19,23 @@
 #include "undirected_graph.h"
 
 int main() {
-    graph *g = load_from_file("g_4.txt");
-    if(g == NULL)
-        return 1;
+    for(int i = 1; i < 5; i++) {
+        char* file_name;
+        sprintf(file_name, "g_%d.txt", i);
+        graph *g = load_from_file(file_name);
+        if(g == NULL)
+            continue;
 
-    find_maximal_cliques(g);
+        printf("Největší kliky grafu: %s\n", file_name);
 
-    for(int i = 0; i < g->number_of_max_cliques; i++) 
-        print_set(g->maximal_cliques[i]);
+        find_maximal_cliques(g);
 
-    free_graph(g);
+        SL_print_list(g->maximal_cliques);
+
+        printf("\n");
+
+        free_graph(g);
+    }
 
     return 0;
 }

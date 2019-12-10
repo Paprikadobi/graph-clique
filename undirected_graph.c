@@ -23,15 +23,11 @@ graph* create_graph(int V) {
         return NULL;
 
     g->V = V;
-    g->adjacents = (l_list**) malloc(g->V * sizeof(l_list*));
-    g->maximal_clique = -1;
-    g->number_of_max_cliques = 0;
+    g->adjacents = (int_list**) malloc(g->V * sizeof(int_list*));
+    g->maximal_cliques = SL_create_list();
 
     for(int i = 0; i < V; i++) 
-        g->adjacents[i] = create_list();
-
-    for(int i = 0; i < MAX_NUMBER_OF_MAX_CLIQUES; i++) 
-        g->maximal_cliques[i] = NULL;
+        g->adjacents[i] = IL_create_list();
 
     return g;
 }
@@ -43,7 +39,7 @@ graph* create_graph(int V) {
 graph* load_from_file(char* file_name) {
     FILE *file = fopen(file_name, "r");
     if(file == NULL) {
-        printf("Nepodařilo se otevřít soubor s názvem %s.", file_name);
+        printf("Nepodařilo se otevřít soubor s názvem %s.\n\n", file_name);
         return NULL;
     }
 
@@ -70,8 +66,8 @@ void add_edge(int first, int second, graph *g) {
     if(first >= g->V || second >= g->V) 
         return;
 
-    insert_first(first, g->adjacents[second]);
-    insert_first(second, g->adjacents[first]);
+    IL_insert_first(first, g->adjacents[second]);
+    IL_insert_first(second, g->adjacents[first]);
 }
 
 /*
@@ -94,10 +90,7 @@ void find_maximal_cliques(graph *g) {
  */
 void _find_maximal_cliques(simple_set *R, simple_set *P, simple_set *X, graph *g) {
     if(P->used == 0 && X->used == 0) {
-        if(g->number_of_max_cliques < MAX_NUMBER_OF_MAX_CLIQUES)
-            g->maximal_cliques[g->number_of_max_cliques++] = R;
-        else
-            printf("Bylo nalezeno více než maximální počet maximálních klik\n");
+        SL_insert_first(R, g->maximal_cliques);
 
         free_set(P);
         free_set(X);
@@ -128,10 +121,9 @@ void _find_maximal_cliques(simple_set *R, simple_set *P, simple_set *X, graph *g
  */
 void free_graph(graph *g) {
     for(int i = 0; i < g->V; i++) 
-        free_list(g->adjacents[i]);
-
-    for(int i = 0; i < g->number_of_max_cliques; i++) 
-        free_set(g->maximal_cliques[i]);
+        IL_free_list(g->adjacents[i]);
+ 
+    SL_free_list(g->maximal_cliques);
 
     free(g);
 }
@@ -143,7 +135,7 @@ void print_graph(graph *g) {
     for(int i = 0; i < g->V; i++) {
         printf("%d: ", i);
 
-        ll_element *current = g->adjacents[i]->first;
+        int_element *current = g->adjacents[i]->first;
 
         while(current != NULL) {
             printf("%d ", current->value);
